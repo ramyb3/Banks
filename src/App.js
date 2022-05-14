@@ -83,6 +83,6 @@ export const getLocation= async (position)=> // get location using google maps a
 {
     const key='<PUT YOUR API KEY HERE>'; // api key
 
-    let temp= await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${position[0]},${position[1]}&key=${key}`);
-    return temp.data.results[0].address_components.find(x=> x.types.includes('locality') && x.types.includes('political')).long_name; //get user's city    
+    let resp= await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${position[0]},${position[1]}&key=${key}`);
+    return resp.data.results[0].address_components.find(x=> x.types.includes('locality') && x.types.includes('political')).long_name; //get user's city    
 }
