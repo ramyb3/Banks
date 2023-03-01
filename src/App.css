@@ -1,0 +1,70 @@
+h1 {
+  text-align: center;
+  font-size: 3rem;
+}
+
+img {
+  padding: 10px 5px 0 5px;
+  width: 30px;
+}
+
+input {
+  font-size: 20px;
+  text-align: center;
+  margin-left: 3px;
+}
+
+button {
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.container {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.card {
+  text-align: center;
+  border: 2px solid rgba(77, 72, 75, 0.767);
+  border-radius: 25px;
+  margin: auto;
+  margin-bottom: 10px;
+  width: 400px;
+  min-height: 170px;
+  background-color: rgb(188, 226, 231);
+}
+
+.name {
+  font-size: 1.3rem;
+  font-weight: bold;
+  text-decoration: underline;
+  padding-bottom: 3px;
+}
+
+.branch {
+  font-size: 1.2rem;
+}
+
+.address {
+  font-size: 1rem;
+  font-weight: bold;
+  padding-bottom: 3px;
+}
+
+.type {
+  color: navy;
+}
+
+.close {
+  color: red;
+  font-weight: bold;
+}
+
+@media (max-width: 405px) {
+  .card {
+    width: 90%;
+  }
+}
