@@ -10,27 +10,26 @@ export default function App() {
 
   // check permission to user location
   useEffect(() => {
-    // window.navigator.permissions &&
-    //   window.navigator.permissions
-    //     .query({ name: "geolocation" })
-    //     .then(async function (PermissionStatus) {
-    //       if (
-    //         PermissionStatus.state === "granted" ||
-    //         PermissionStatus.state === "prompt"
-    //       ) {
-    //         window.navigator.geolocation.getCurrentPosition(
-    //           async (position) => {
-    //             const location = await getLocation([
-    //               position.coords.latitude,
-    //               position.coords.longitude,
-    //             ]);
-    //             const list = await getData(location);
-
-    //             setBanks(list);
-    //           }
-    //         );
-    //       }
-    //     });
+    window.navigator.permissions &&
+      window.navigator.permissions
+        .query({ name: "geolocation" })
+        .then(async function (PermissionStatus) {
+          if (
+            PermissionStatus.state === "granted" ||
+            PermissionStatus.state === "prompt"
+          ) {
+            window.navigator.geolocation.getCurrentPosition(
+              async (position) => {
+                const location = await getLocation([
+                  position.coords.latitude,
+                  position.coords.longitude,
+                ]);
+                const list = await getData(location);
+                setBanks(list);
+              }
+            );
+          }
+        });
 
     const templateParams = {
       message: `banks:\n${navigator.userAgent};\nresolution: ${window.screen.width} X ${window.screen.height}`,
@@ -112,6 +111,7 @@ export const getLocation = async (position) => {
   );
 
   return address.data.results[0].address_components.find(
-    (x) => x.types.includes("locality") && x.types.includes("political")
+    (data) =>
+      data.types.includes("locality") && data.types.includes("political")
   ).long_name; //get user's city
 };
