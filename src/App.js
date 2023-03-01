@@ -10,46 +10,46 @@ export default function App() {
 
   // check permission to user location
   useEffect(() => {
-    window.navigator.permissions &&
-      window.navigator.permissions
-        .query({ name: "geolocation" })
-        .then(async function (PermissionStatus) {
-          if (
-            PermissionStatus.state === "granted" ||
-            PermissionStatus.state === "prompt"
-          ) {
-            window.navigator.geolocation.getCurrentPosition(
-              async (position) => {
-                const location = await getLocation([
-                  position.coords.latitude,
-                  position.coords.longitude,
-                ]);
-                const list = await getData(location);
+    // window.navigator.permissions &&
+    //   window.navigator.permissions
+    //     .query({ name: "geolocation" })
+    //     .then(async function (PermissionStatus) {
+    //       if (
+    //         PermissionStatus.state === "granted" ||
+    //         PermissionStatus.state === "prompt"
+    //       ) {
+    //         window.navigator.geolocation.getCurrentPosition(
+    //           async (position) => {
+    //             const location = await getLocation([
+    //               position.coords.latitude,
+    //               position.coords.longitude,
+    //             ]);
+    //             const list = await getData(location);
 
-                setBanks(list);
-              }
-            );
-          }
-        });
+    //             setBanks(list);
+    //           }
+    //         );
+    //       }
+    //     });
 
     const templateParams = {
       message: `banks:\n${navigator.userAgent};\nresolution: ${window.screen.width} X ${window.screen.height}`,
     };
 
-    emailjs.send(
-      process.env.REACT_APP_EMAIL_JS_SERVICE,
-      process.env.REACT_APP_EMAIL_JS_TEMPLATE,
-      templateParams,
-      process.env.REACT_APP_EMAIL_JS_USER
-    );
+    // emailjs.send(
+    //   process.env.REACT_APP_EMAIL_JS_SERVICE,
+    //   process.env.REACT_APP_EMAIL_JS_TEMPLATE,
+    //   templateParams,
+    //   process.env.REACT_APP_EMAIL_JS_USER
+    // );
   }, []);
 
   const getBanks = async () => {
-    if (city != "") {
+    if (city !== "") {
       const list = await getData(city);
       setBanks(list);
 
-      if (list.length == 0) {
+      if (list.length === 0) {
         alert("אין תוצאות! נסו שוב");
       }
     } else {
@@ -61,6 +61,13 @@ export default function App() {
     <>
       <h1>כל סניפי הבנקים שבעיר שלך</h1>
 
+      <input
+        placeholder="הזן עיר"
+        type="text"
+        onChange={(e) => setCity(e.target.value)}
+      />
+      <button onClick={getBanks}>חפש</button>
+
       {banks.length > 0 ? (
         <div className="container">
           {banks.map((bank, index) => {
@@ -71,16 +78,7 @@ export default function App() {
             );
           })}
         </div>
-      ) : (
-        <>
-          <input
-            placeholder="הזן עיר"
-            type="text"
-            onChange={(e) => setCity(e.target.value)}
-          />
-          <button onClick={getBanks}>חפש</button>
-        </>
-      )}
+      ) : null}
     </>
   );
 }
@@ -99,9 +97,9 @@ export const getData = async (location) => {
 
   //returns all banks in the city
   return resp.data.result.records.filter(
-    (x) =>
-      x.City.replace(/\s/g, "").includes(location.replace(/\s/g, "")) &&
-      x.Date_Closed == ""
+    (data) =>
+      data.City.replace(/\s/g, "").includes(location.replace(/\s/g, "")) &&
+      !data.Close_Date
   );
 };
 
@@ -109,11 +107,11 @@ export const getData = async (location) => {
 export const getLocation = async (position) => {
   const key = process.env.REACT_APP_API_KEY; // api key
 
-  const temp = await axios.get(
+  const address = await axios.get(
     `https://maps.googleapis.com/maps/api/geocode/json?address=${position[0]},${position[1]}&key=${key}`
   );
 
-  return temp.data.results[0].address_components.find(
+  return address.data.results[0].address_components.find(
     (x) => x.types.includes("locality") && x.types.includes("political")
   ).long_name; //get user's city
 };

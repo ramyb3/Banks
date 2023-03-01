@@ -16,17 +16,26 @@ export default function Bank(props) {
         target="_blank"
         rel="noreferrer"
       >
-        <img src="https://www.pngplay.com/wp-content/uploads/12/GPS-Icon-PNG-Clip-Art-HD-Quality.png" />
+        <img
+          src="https://www.pngplay.com/wp-content/uploads/12/GPS-Icon-PNG-Clip-Art-HD-Quality.png"
+          alt=""
+        />
       </a>
 
       {props.bank.Telephone != "" ? (
         <a href={"tel:" + props.bank.Telephone}>
-          <img src="https://www.seekpng.com/png/detail/814-8147045_call-us-phone-icon-black-circle.png" />
+          <img
+            src="https://www.seekpng.com/png/detail/814-8147045_call-us-phone-icon-black-circle.png"
+            alt=""
+          />
         </a>
       ) : null}
 
       {props.bank.Handicap_Access == "כן" ? (
-        <img src="https://www.nicepng.com/png/detail/119-1192777_assistive-technology-icon-accessibility-icon-white.png" />
+        <img
+          src="https://www.nicepng.com/png/detail/119-1192777_assistive-technology-icon-accessibility-icon-white.png"
+          alt=""
+        />
       ) : null}
     </>
   );
