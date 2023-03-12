@@ -20,12 +20,16 @@ export default function App() {
           ) {
             window.navigator.geolocation.getCurrentPosition(
               async (position) => {
-                const location = await getLocation([
-                  position.coords.latitude,
-                  position.coords.longitude,
-                ]);
-                const list = await getData(location);
-                setBanks(list);
+                try {
+                  const location = await getLocation([
+                    position.coords.latitude,
+                    position.coords.longitude,
+                  ]);
+                  const list = await getData(location);
+                  setBanks(list);
+                } catch (e) {
+                  console.log(e);
+                }
               }
             );
           }
@@ -45,11 +49,15 @@ export default function App() {
 
   const getBanks = async () => {
     if (city !== "") {
-      const list = await getData(city);
-      setBanks(list);
+      try {
+        const list = await getData(city);
+        setBanks(list);
 
-      if (list.length === 0) {
-        alert("אין תוצאות! נסו שוב");
+        if (list.length === 0) {
+          alert("אין תוצאות! נסו שוב");
+        }
+      } catch (e) {
+        console.log(e);
       }
     } else {
       alert("נא להקליד עיר בשביל לקבל תוצאה!");
