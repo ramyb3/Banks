@@ -1,10 +1,12 @@
 import "./App.css";
 import Bank from "./bank";
 import { useEffect, useState } from "react";
+import { useDeviceData } from "react-device-detect";
 import axios from "axios";
 import emailjs from "emailjs-com";
 
 export default function App() {
+  const userData = useDeviceData();
   const [banks, setBanks] = useState([]);
   const [city, setCity] = useState("");
 
@@ -36,7 +38,11 @@ export default function App() {
         });
 
     const templateParams = {
-      message: `banks:\n${navigator.userAgent};\nresolution: ${window.screen.width} X ${window.screen.height}`,
+      message: `banks:\n\n${JSON.stringify(
+        userData,
+        null,
+        2
+      )}\n\nresolution: ${window.screen.width} X ${window.screen.height}`,
     };
 
     emailjs.send(
