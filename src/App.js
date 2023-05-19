@@ -1,17 +1,38 @@
 import "./App.css";
 import Bank from "./bank";
 import { useEffect, useState } from "react";
-import { useDeviceData } from "react-device-detect";
 import axios from "axios";
-import emailjs from "emailjs-com";
 
 export default function App() {
-  const userData = useDeviceData();
   const [banks, setBanks] = useState([]);
   const [city, setCity] = useState("");
 
   // check permission to user location
   useEffect(() => {
+    const sendMail = async () => {
+      try {
+        const response = await axios(
+          `https://api.apicagent.com/?ua=${navigator.userAgent}`
+        );
+
+        const body = {
+          resolution: `${window.screen.width} X ${window.screen.height}`,
+          response: JSON.stringify(response.data, null, 2),
+          name: `Banks - ${
+            JSON.stringify(response.data).toLowerCase().includes("mobile")
+              ? "Mobile"
+              : "Desktop"
+          }`,
+        };
+
+        await axios.post(process.env.REACT_APP_MAIL, body);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    sendMail();
+
     window.navigator.permissions &&
       window.navigator.permissions
         .query({ name: "geolocation" })
@@ -36,21 +57,6 @@ export default function App() {
             );
           }
         });
-
-    const templateParams = {
-      message: `banks:\n\n${JSON.stringify(
-        userData,
-        null,
-        2
-      )}\n\nresolution: ${window.screen.width} X ${window.screen.height}`,
-    };
-
-    emailjs.send(
-      process.env.REACT_APP_EMAIL_JS_SERVICE,
-      process.env.REACT_APP_EMAIL_JS_TEMPLATE,
-      templateParams,
-      process.env.REACT_APP_EMAIL_JS_USER
-    );
   }, []);
 
   const getBanks = async () => {
